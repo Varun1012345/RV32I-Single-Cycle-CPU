@@ -72,6 +72,14 @@ The testbench checks:
 
 **Overall functional simulation: PASS**
 
+### ModelSim Simulation Results
+
+The following waveform demonstrates the operation of the RV32I single-cycle CPU, including instruction execution, ALU operations, memory controls, and branch/jump signals.
+
+All 10 supported instruction tests passed in the directed testbench.
+
+![ModelSim Simulation Results](simulation_results.png)
+
 ## Tools Used
 
 - Verilog HDL
