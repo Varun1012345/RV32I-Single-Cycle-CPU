@@ -1,6 +1,6 @@
 # RV32I Single-Cycle CPU
 
-A 32-bit RISC-V single-cycle processor designed and implemented using Verilog HDL. This project focuses on processor architecture, RTL design, datapath implementation, control logic, and functional verification.
+A 32-bit RISC-V single-cycle processor designed and implemented using Verilog HDL. This project focuses on processor architecture, RTL design, datapath implementation, control logic, functional verification, synthesis, and implementation analysis.
 
 ## Overview
 
@@ -44,9 +44,9 @@ The processor follows a single-cycle datapath architecture.
 
 ## Verification
 
-Functional verification was performed using a Verilog testbench in ModelSim.
+Functional verification was initially performed using a directed Verilog testbench in ModelSim.
 
-The testbench checks:
+The original directed testbench covered:
 - Arithmetic and immediate operations
 - Register file read/write behavior
 - Load and store operations
@@ -55,69 +55,84 @@ The testbench checks:
 - Upper immediate instructions
 - Jump target execution and link addresses
 
-### Verification Results
+### Original Behavioral Verification Results
 
-| Instruction | Result |
-|---|---|
-| ADD | PASS |
-| SUB | PASS |
-| ADDI | PASS |
-| LW | PASS |
-| SW | PASS |
-| BEQ | PASS |
-| JAL | PASS |
-| JALR | PASS |
-| LUI | PASS |
-| AUIPC | PASS |
+The original directed behavioral simulation reported PASS results for all 10 supported instructions.
 
-**Overall functional simulation: PASS**
+**Overall original behavioral simulation: PASS**
 
-### ModelSim Simulation Results
+Note: The current `tb/full_cpu_tb.v` has since been changed to a trace-based testbench for post-synthesis functional simulation. The original directed checks are not currently present in this file.
 
-The following waveform demonstrates the operation of the RV32I single-cycle CPU, including instruction execution, ALU operations, memory controls, and branch/jump signals.
+### Post-Synthesis Functional Simulation
 
-All 10 supported instruction tests passed in the directed testbench.
+Post-synthesis functional simulation was performed using Vivado Simulator.
 
-![ModelSim Simulation Results](simulation_results.png)
+The trace-based testbench monitors:
+- Program counter (`debug_pc`)
+- Current instruction (`debug_instruction`)
+- ALU result (`debug_alu_result`)
+
+The simulation trace demonstrates execution of arithmetic, memory, branch, and jump instructions, including PC redirection through BEQ, JAL, and JALR.
+
+## Synthesis and Implementation
+
+RTL synthesis and implementation were completed successfully in AMD Vivado 2025.2 for the target FPGA part `xc7a35tcpg236-1`.
+
+### Synthesis Utilization
+
+| Resource | Used |
+|---|---:|
+| LUTs | 534 |
+| Flip-flops | 40 |
+| I/O ports | 98 |
+| LUTs as Memory | 176 |
+| BUFGCTRL | 1 |
+
+### Timing Analysis
+
+The implementation timing summary reported:
+
+| Metric | Result |
+|---|---:|
+| Worst Negative Slack (WNS) | +0.165 ns |
+| Total Negative Slack (TNS) | 0 ns |
+| Worst Hold Slack (WHS) | +0.328 ns |
+| Total Hold Slack (THS) | 0 ns |
+| Setup failing endpoints | 0 |
+| Hold failing endpoints | 0 |
+
+The timing summary shows no failing setup or hold endpoints for the analyzed implementation.
+
+### Design Rule Checks
+
+Implementation completed successfully, but the DRC report contains warnings related to:
+- Unspecified I/O standards (NSTD-1)
+- Unassigned package pins (UCIO-1)
+- Unspecified configuration voltage settings (CFGBVS-1)
+
+These constraints have not been assigned because a physical FPGA board and its pinout are not available. Bitstream generation and physical FPGA testing have therefore not been completed.
 
 ## Tools Used
 
 - Verilog HDL
+- AMD Vivado 2025.2
 - ModelSim
 - Git and GitHub
 
-## Repository Structure
-
-```text
-RV32I-Single-Cycle-CPU/
-│
-├── rtl/
-│   ├── alu.v
-│   ├── control_unit.v
-│   ├── data_memory.v
-│   ├── imm_gen.v
-│   ├── instruction_memory.v
-│   ├── pc.v
-│   ├── regfile.v
-│   └── rv32i_single_cycle.v
-│
-├── tb/
-│   └── full_cpu_tb.v
-│
-├── README.md
-└── .gitignore
-```
-
 ## Future Improvements
 
-- Expand instruction-set support.
-- Develop more comprehensive directed and randomized verification.
-- Perform RTL synthesis and area analysis.
-- Conduct static timing analysis.
+- Expand instruction-set support toward full RV32I compatibility.
+- Restore and expand directed behavioral verification.
+- Develop randomized verification.
+- Improve timing and resource utilization.
+- Add board-specific pin and I/O constraints when hardware is available.
+- Generate a bitstream and perform physical FPGA testing.
 - Explore ASIC physical design and implementation.
 
 ## Project Status
 
-**RTL implementation and functional simulation completed for the selected 10 instructions.**
+**A 10-instruction RV32I single-cycle CPU subset has been implemented, behaviorally tested, synthesized, and successfully implemented in Vivado.**
 
-Synthesis, timing analysis, and physical implementation are planned as future stages.
+Post-synthesis functional simulation and implementation timing analysis have also been performed.
+
+Physical FPGA validation and full RV32I instruction support remain future work.
