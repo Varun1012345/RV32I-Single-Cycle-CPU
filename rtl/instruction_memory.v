@@ -5,7 +5,10 @@ module instruction_memory (
 
     reg [31:0] memory [0:255];
 
-    // Convert byte address into word index
+    initial begin
+        $readmemh("program.mem", memory);
+    end
+
     assign instruction = memory[address[9:2]];
 
 endmodule

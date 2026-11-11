@@ -1,5 +1,27 @@
+
+# ModelSim generated files
 work/
 transcript
 vsim.wlf
 *.wlf
 *.vcd
+
+# Vivado generated directories
+**/.cache/
+**/.runs/
+**/.sim/
+**/.hw/
+**/.ip_user_files/
+
+# Vivado generated files
+*.jou
+*.log
+*.pb
+*.dcp
+*.rpx
+*.wdf
+*.wdb
+*.vdi
+*.str
+
+vivado/

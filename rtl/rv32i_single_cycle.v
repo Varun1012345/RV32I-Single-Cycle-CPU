@@ -1,6 +1,9 @@
 module rv32i_single_cycle (
     input wire clk,
-    input wire reset
+    input wire reset,
+    output wire [31:0] debug_pc,
+    output wire [31:0] debug_instruction,
+    output wire [31:0] debug_alu_result
 );
 
     // 1. Program Counter signals
@@ -98,7 +101,7 @@ module rv32i_single_cycle (
         .rd(rd),
         .wd(write_back_data),
         .rd1(read_data1),
-        .rd2(read_data2)
+        .rd2(read_data2)        
 );
     // ALU input B multiplexer
     assign alu_input_b = alu_src ? immediate : read_data2;
@@ -141,4 +144,7 @@ module rv32i_single_cycle (
                            : (opcode == 7'b0110111)
                              ? immediate
                              : alu_result;
+                             assign debug_pc = current_pc;
+assign debug_instruction = instruction;
+assign debug_alu_result = alu_result;
 endmodule

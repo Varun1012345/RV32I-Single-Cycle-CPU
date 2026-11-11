@@ -24,5 +24,4 @@ module regfile (
     // Combinational read logic
     assign rd1 = (rs1 == 5'd0) ? 32'd0 : registers[rs1];
     assign rd2 = (rs2 == 5'd0) ? 32'd0 : registers[rs2];
-
 endmodule
